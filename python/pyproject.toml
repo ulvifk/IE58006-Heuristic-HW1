@@ -28,6 +28,7 @@ indent-style = "space"
 
 [tool.pyrefly]
 project-includes = ["**/*.py*"]
+search-path = ["src"]
 
 [tool.pyrefly.errors]
 unannotated-parameter = true
