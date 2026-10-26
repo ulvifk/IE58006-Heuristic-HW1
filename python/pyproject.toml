@@ -2,10 +2,14 @@
 name = "analysis"
 version = "0.1.0"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "jinja2>=3.1.6",
+    "pandas>=3.1.0",
+]
 
 [dependency-groups]
 dev = [
+    "pandas-stubs>=3.0.5.260914",
     "pyrefly>=1.4.0",
     "ruff>=0.17.2",
 ]
