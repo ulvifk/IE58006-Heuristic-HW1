@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Locale;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
@@ -50,19 +49,9 @@ public final class Main {
                     SimulatedAnnealingFactory.build(config, problemData).solve();
 
             var json = OBJECT_MAPPER.writeValueAsString(new ExperimentResult(config, solverSolution));
-            Files.writeString(directory.resolve(getFileName(config)), json);
+            Files.writeString(directory.resolve(config.getConfigKey() + ".json"), json);
         }
 
         LOGGER.info("{}: {} runs written to {}", experimentName, configs.size(), directory);
-    }
-
-    // e.g. t0-3.00_alpha-0.90_seed-7.json
-    private static String getFileName(SimulatedAnnealingConfig config) {
-        return String.format(
-                Locale.ROOT,
-                "t0-%.2f_alpha-%.2f_seed-%d.json",
-                config.getInitialTemperature(),
-                config.getCoolingRate(),
-                config.getSeed());
     }
 }
