@@ -13,10 +13,10 @@ public final class SolutionFactory {
     public static Solution build(Tour tour, DistanceMatrix distanceMatrix) {
         var cityIds = tour.getCityIds();
         var cost = 0.0;
-        for (int position = 0; position < cityIds.size(); position++) {
-            var nextCityId = cityIds.get((position + 1) % cityIds.size());
-            cost += distanceMatrix.getDistance(cityIds.get(position), nextCityId);
+        for (int position = 0; position < cityIds.size() - 1; position++) {
+            cost += distanceMatrix.getDistance(cityIds.get(position), cityIds.get(position + 1));
         }
+        cost += distanceMatrix.getDistance(cityIds.getLast(), cityIds.getFirst());
 
         return new Solution(tour, cost);
     }
