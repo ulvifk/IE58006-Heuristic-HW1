@@ -1,9 +1,7 @@
 package heuristic;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import heuristic.experiments.ExperimentResult;
+import heuristic.experiments.ExperimentResultParser;
 import heuristic.experiments.ExperimentsConfigs;
 import heuristic.model.data.ProblemData;
 import heuristic.model.data.ProblemDataParser;
@@ -27,10 +25,6 @@ public final class Main {
     private static final Path INSTANCE_PATH = Path.of("instances", "tsp20.json");
     private static final Path OUTPUT_DIRECTORY = Path.of("experiments");
 
-    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
-            .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-            .build();
-
     public static void main(String[] args) throws IOException {
         var problemData = ProblemDataParser.fromJson(Files.readString(INSTANCE_PATH));
 
@@ -48,7 +42,7 @@ public final class Main {
             var solverSolution =
                     SimulatedAnnealingFactory.build(config, problemData).solve();
 
-            var json = OBJECT_MAPPER.writeValueAsString(new ExperimentResult(config, solverSolution));
+            var json = ExperimentResultParser.toJson(new ExperimentResult(config, solverSolution));
             Files.writeString(directory.resolve(config.getConfigKey() + ".json"), json);
         }
 
