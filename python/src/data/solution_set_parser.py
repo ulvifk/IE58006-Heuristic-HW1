@@ -3,8 +3,11 @@ import json
 from typing import Any
 
 from data.solution_set import (
+    City,
+    DistanceMatrix,
     ExperimentResult,
     IterationLog,
+    ProblemData,
     SimulatedAnnealingConfig,
     Solution,
     SolutionSet,
@@ -38,6 +41,7 @@ class SolutionSetParser:
         )
 
         return ExperimentResult(
+            problem_data=SolutionSetParser._parse_problem_data(raw["problem_data"]),
             config=SimulatedAnnealingConfig(**raw["config"]),
             solver_solution=SolverSolution(
                 solution=SolutionSetParser._parse_solution(
@@ -45,6 +49,16 @@ class SolutionSetParser:
                 ),
                 meta_data=iteration_logs,
             ),
+        )
+
+    @staticmethod
+    def _parse_problem_data(raw: dict[str, Any]) -> ProblemData:
+        distances = tuple(tuple(row) for row in raw["distance_matrix"]["distances"])
+
+        return ProblemData(
+            cities=tuple(City(**raw_city) for raw_city in raw["cities"]),
+            initial_tour=Tour(city_ids=tuple(raw["initial_tour"]["city_ids"])),
+            distance_matrix=DistanceMatrix(distances=distances),
         )
 
     @staticmethod

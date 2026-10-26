@@ -2,6 +2,20 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
+class City:
+    id: int
+    x: float
+    y: float
+
+
+@dataclass(frozen=True, slots=True)
+class DistanceMatrix:
+    distances: tuple[
+        tuple[float, ...], ...
+    ]  # [from city id][to city id] -> rounded distance
+
+
+@dataclass(frozen=True, slots=True)
 class SimulatedAnnealingConfig:
     initial_temperature: float  # T0
     minimum_temperature: float  # Tmin; the search stops once T is at or below it
@@ -50,7 +64,15 @@ class SolverSolution:
 
 
 @dataclass(frozen=True, slots=True)
+class ProblemData:
+    cities: tuple[City, ...]  # [city id] -> city
+    initial_tour: Tour  # the baseline tour every run starts from
+    distance_matrix: DistanceMatrix
+
+
+@dataclass(frozen=True, slots=True)
 class ExperimentResult:
+    problem_data: ProblemData
     config: SimulatedAnnealingConfig
     solver_solution: SolverSolution
 

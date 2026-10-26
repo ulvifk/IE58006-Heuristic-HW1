@@ -73,5 +73,6 @@ class LengthTemperaturePlot:
             ax=temperature_axes,
         )
         length_axes.legend(title=None)
+        length_axes.set_title(PlotFormat.build_config_title(result.config))
 
         PlotFormat.save(LengthTemperaturePlot.FILE_NAME, figure)
