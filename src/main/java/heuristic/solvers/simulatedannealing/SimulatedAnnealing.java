@@ -65,7 +65,7 @@ public class SimulatedAnnealing {
                 best = current;
             }
 
-            log(move, acceptanceProbability, randomDraw, accepted);
+            log(move, delta, acceptanceProbability, randomDraw, accepted);
 
             // T <- alpha * T after every movesPerTemperature candidates
             if (iterationLogs.size() % config.getMovesPerTemperature() == 0) {
@@ -84,10 +84,19 @@ public class SimulatedAnnealing {
     }
 
     // records the candidate at the current temperature, with the current and best solutions after the decision
-    private void log(TwoOptMove move, Double acceptanceProbability, Double randomDraw, boolean accepted) {
+    private void log(TwoOptMove move, double delta, Double acceptanceProbability, Double randomDraw, boolean accepted) {
         var iteration = iterationLogs.size() + 1;
         iterationLogs.add(new IterationLog(
-                iteration, temperature, move, acceptanceProbability, randomDraw, accepted, current, best));
+                iteration,
+                temperature,
+                move.getI(),
+                move.getJ(),
+                delta,
+                acceptanceProbability,
+                randomDraw,
+                accepted,
+                current,
+                best));
     }
 
     /// Draws positions i < j of a 2-opt move, with j >= i + 2 since j = i + 1 reverses a single city.

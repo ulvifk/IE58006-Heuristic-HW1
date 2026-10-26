@@ -1,6 +1,5 @@
 package heuristic.solvers.simulatedannealing;
 
-import heuristic.localsearch.TwoOptMove;
 import heuristic.model.solution.Solution;
 import lombok.Value;
 
@@ -11,7 +10,9 @@ public class IterationLog {
     int iteration; // 1 for the first candidate
     double temperature; // T the candidate was judged at
 
-    TwoOptMove move; // delta = -gain
+    int i; // the 2-opt move's positions
+    int j;
+    double delta; // tour length change if accepted; negative improves
     Double acceptanceProbability; // p = e^(-delta / T); null when the move is not worsening
     Double randomDraw; // u from U(0, 1); null when the move is not worsening
     boolean accepted;

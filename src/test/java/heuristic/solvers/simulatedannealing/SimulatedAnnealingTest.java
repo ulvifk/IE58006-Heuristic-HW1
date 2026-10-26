@@ -86,9 +86,8 @@ class SimulatedAnnealingTest {
                         iterationLog.getRandomDraw() < iterationLog.getAcceptanceProbability(),
                         iterationLog.isAccepted());
             }
-            var expectedCurrentCost = iterationLog.isAccepted()
-                    ? previousCurrentCost - iterationLog.getMove().getGain()
-                    : previousCurrentCost;
+            var expectedCurrentCost =
+                    iterationLog.isAccepted() ? previousCurrentCost + iterationLog.getDelta() : previousCurrentCost;
             assertEquals(expectedCurrentCost, currentCost, 1e-9);
             assertTrue(bestCost <= previousBestCost);
             assertEquals(Math.min(previousBestCost, currentCost), bestCost, 1e-9);
