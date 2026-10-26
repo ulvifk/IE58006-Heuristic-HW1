@@ -3,6 +3,7 @@
 \usepackage{fullpage}
 \usepackage{amsmath}
 \usepackage{booktabs}
+\usepackage{makecell}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{hyperref}
@@ -43,8 +44,8 @@
 
 \begin{table}[ht]
     \centering
-    \input{tables/c1_best_length_statistics}
-    \caption{C1(a): final best tour length per cooling factor $\alpha$ over seeds 0--9 ($T_0 = 3.0$, $T_{min} = 0.02$, 20 moves per temperature); sample standard deviation.}
+    \input{tables/c1_cooling_rate}
+    \caption{C1: effect of the cooling factor $\alpha$ over seeds 0--9 ($T_0 = 3.0$, $T_{min} = 0.02$, 20 moves per temperature). Best, mean and sample standard deviation of the final best tour length; candidate moves before $T$ reaches $T_{min}$, the same for every seed; share of proposed worsening moves that were accepted, pooled over the seeds.}
 \end{table}
 
 \section*{Part D: Interpretation and Reflection}

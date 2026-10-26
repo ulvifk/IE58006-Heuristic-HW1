@@ -28,11 +28,17 @@ class TableFormat:
         return f"{value:.{TableFormat.PROBABILITY_DECIMALS}f}"
 
     @staticmethod
-    def write(file_name: str, table: pd.DataFrame, column_format: str) -> None:
+    def stack_header(*lines: str) -> str:
+        """A header cell over several lines; e.g. ("Candidate", "moves") -> \\makecell{Candidate\\\\moves}."""
+        return "\\makecell{" + "\\\\".join(lines) + "}"
+
+    @staticmethod
+    def write(file_name: str, table: pd.DataFrame) -> None:
         """
-        Writes an already formatted table as a booktabs tabular, its column names as
-        the header.
+        Writes an already formatted table as a booktabs tabular with every column
+        centered, its column names as the header.
         """
+        column_format = "c" * len(table.columns)
         latex = table.to_latex(index=False, escape=False, column_format=column_format)
         TableFormat.write_latex(file_name, latex)
 

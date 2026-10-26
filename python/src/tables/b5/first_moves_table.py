@@ -34,4 +34,4 @@ class FirstMovesTable:
                 }
             )
 
-        TableFormat.write(FirstMovesTable.FILE_NAME, pd.DataFrame(rows), "rrcrrrlrr")
+        TableFormat.write(FirstMovesTable.FILE_NAME, pd.DataFrame(rows))
