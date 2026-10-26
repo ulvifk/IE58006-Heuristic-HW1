@@ -26,7 +26,7 @@ class SimulatedAnnealingTest {
 
     @Test
     void bestSolutionImprovesOnTheBaselineAndIsCostedCorrectly() {
-        var best = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
+        var best = SimulatedAnnealingFactory.build(buildBaselineConfig(7), problemData)
                 .solve()
                 .getSolution();
 
@@ -40,10 +40,10 @@ class SimulatedAnnealingTest {
 
     @Test
     void sameSeedGivesTheSameBestSolution() {
-        var first = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
+        var first = SimulatedAnnealingFactory.build(buildBaselineConfig(7), problemData)
                 .solve()
                 .getSolution();
-        var second = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
+        var second = SimulatedAnnealingFactory.build(buildBaselineConfig(7), problemData)
                 .solve()
                 .getSolution();
 
@@ -51,10 +51,9 @@ class SimulatedAnnealingTest {
     }
 
     @Test
-    void returnsTheInitialSolutionWhenTheTimeLimitIsZero() {
-        var best = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 0.0), problemData)
-                .solve()
-                .getSolution();
+    void returnsTheInitialSolutionWhenTheInitialTemperatureIsAtTheMinimum() {
+        var config = new SimulatedAnnealingConfig(0.02, 0.02, 0.90, 20, 7);
+        var best = SimulatedAnnealingFactory.build(config, problemData).solve().getSolution();
 
         assertEquals(problemData.getInitialTour(), best.getTour());
     }
@@ -62,7 +61,7 @@ class SimulatedAnnealingTest {
     // T reaches Tmin = 0.02 after 48 cooling steps, since 3.0 * 0.9^47 > 0.02 >= 3.0 * 0.9^48; 48 * 20 candidates
     @Test
     void logsEveryCandidateUntilTheTemperatureReachesTheMinimum() {
-        var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData);
+        var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7), problemData);
         var solverSolution = simulatedAnnealing.solve();
         var best = solverSolution.getSolution();
 
@@ -76,7 +75,7 @@ class SimulatedAnnealingTest {
 
     @Test
     void logsAcceptanceDecisionsConsistentWithTheMoves() {
-        var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData);
+        var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7), problemData);
         var iterationLogs = simulatedAnnealing.solve().getMetaData();
 
         var previousCurrentCost = 94.15;
@@ -105,7 +104,7 @@ class SimulatedAnnealingTest {
 
     @Test
     void neverProposesTheMoveThatOnlyReversesTheTour() {
-        var iterationLogs = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
+        var iterationLogs = SimulatedAnnealingFactory.build(buildBaselineConfig(7), problemData)
                 .solve()
                 .getMetaData();
 
@@ -115,7 +114,7 @@ class SimulatedAnnealingTest {
         }
     }
 
-    private static SimulatedAnnealingConfig buildBaselineConfig(long seed, double timeLimitSeconds) {
-        return new SimulatedAnnealingConfig(3.0, 0.02, 0.90, 20, seed, timeLimitSeconds);
+    private static SimulatedAnnealingConfig buildBaselineConfig(long seed) {
+        return new SimulatedAnnealingConfig(3.0, 0.02, 0.90, 20, seed);
     }
 }

@@ -17,7 +17,7 @@ import java.util.Random;
 /// - an improving move (delta < 0) is accepted outright; a worsening one (delta > 0) when u < p = e^(-delta / T)
 /// - a move with delta = 0, within the tolerance, is rejected without drawing u
 /// - the temperature is multiplied by the cooling rate after every movesPerTemperature candidates
-/// - stops when the temperature reaches the minimum or the time limit passes
+/// - stops when the temperature reaches the minimum
 /// - the best solution only changes when the current one beats it
 public class SimulatedAnnealing {
 
@@ -44,9 +44,7 @@ public class SimulatedAnnealing {
     }
 
     public SolverSolution solve() {
-        var deadlineNanos = System.nanoTime() + (long) (config.getTimeLimitSeconds() * 1e9);
-
-        while (!shouldStop(deadlineNanos)) {
+        while (!shouldStop()) {
             var move = drawRandomMove();
             var delta = -move.getGain();
 
@@ -77,11 +75,8 @@ public class SimulatedAnnealing {
         return new SolverSolution(best, iterationLogs);
     }
 
-    private boolean shouldStop(long deadlineNanos) {
-        if (temperature <= config.getMinimumTemperature()) return true;
-        if (System.nanoTime() >= deadlineNanos) return true;
-
-        return false;
+    private boolean shouldStop() {
+        return temperature <= config.getMinimumTemperature();
     }
 
     // records the candidate at the current temperature, with the current and best solutions after the decision

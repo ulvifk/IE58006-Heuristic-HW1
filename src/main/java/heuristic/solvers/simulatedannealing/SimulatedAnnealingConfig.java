@@ -12,7 +12,6 @@ public class SimulatedAnnealingConfig {
     int movesPerTemperature; // candidate moves between two cooling steps
 
     long seed;
-    double timeLimitSeconds;
 
     // the parameters that differ between experiment runs; e.g. t0-3.00_alpha-0.90_seed-7
     public String getConfigKey() {
