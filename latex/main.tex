@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{makecell}
+\usepackage{float}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{hyperref}
@@ -20,7 +21,7 @@
 
 \section*{Part B: Implementation}
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \input{tables/first_moves}
     \caption{First 10 candidate moves of the baseline run (seed 7).}
@@ -28,13 +29,13 @@
 
 \input{tables/final_best_tour}
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{figures/length_temperature}
     \caption{Current and best-so-far tour length and the temperature over the baseline run (seed 7).}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{figures/final_best_tour}
     \caption{Final best tour of the baseline run (seed 7).}
@@ -44,7 +45,7 @@
 
 \subsection*{C1: Effect of the Cooling Factor $\alpha$}
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \input{tables/c1_cooling_rate}
     \caption{C1: effect of the cooling factor $\alpha$ over seeds 0--9 ($T_0 = 3.0$, $T_{min} = 0.02$, cooling every 20 candidate moves).}
