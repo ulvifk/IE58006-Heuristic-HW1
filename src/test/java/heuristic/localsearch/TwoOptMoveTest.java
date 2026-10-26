@@ -1,6 +1,8 @@
 package heuristic.localsearch;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import heuristic.model.data.ProblemData;
 import heuristic.model.data.ProblemDataParser;
@@ -62,5 +64,15 @@ class TwoOptMoveTest {
                         .getCost(),
                 solution.getCost(),
                 TOLERANCE);
+    }
+
+    @Test
+    void isValidOnlyForMovesThatChangeTheTour() {
+        var distanceMatrix = problemData.getDistanceMatrix();
+
+        assertTrue(new TwoOptMove(baselineSolution, distanceMatrix, 1, 9).isValid());
+        assertTrue(new TwoOptMove(baselineSolution, distanceMatrix, 0, 18).isValid());
+        assertFalse(new TwoOptMove(baselineSolution, distanceMatrix, 4, 5).isValid());
+        assertFalse(new TwoOptMove(baselineSolution, distanceMatrix, 0, 19).isValid());
     }
 }

@@ -14,7 +14,8 @@ import java.util.Random;
 /// candidate.
 ///
 /// - each iteration draws one random 2-opt move of the current solution and accepts or rejects it
-/// - a non-worsening move (delta <= 0) is accepted outright; a worsening one when u < p = e^(-delta / T)
+/// - an improving move (delta < 0) is accepted outright; a worsening one (delta > 0) when u < p = e^(-delta / T)
+/// - a move with delta = 0, within the tolerance, is rejected without drawing u
 /// - the temperature is multiplied by the cooling rate after every movesPerTemperature candidates
 /// - stops when the temperature reaches the minimum or the time limit passes
 /// - the best solution only changes when the current one beats it
@@ -51,7 +52,7 @@ public class SimulatedAnnealing {
 
             Double acceptanceProbability = null;
             Double randomDraw = null;
-            var accepted = true;
+            var accepted = delta < -ZERO_TOLERANCE;
             if (delta > ZERO_TOLERANCE) {
                 acceptanceProbability = Math.exp(-delta / temperature);
                 randomDraw = random.nextDouble();
@@ -99,12 +100,17 @@ public class SimulatedAnnealing {
                 best));
     }
 
-    /// Draws positions i < j of a 2-opt move, with j >= i + 2 since j = i + 1 reverses a single city.
+    /// Draws positions i < j of a 2-opt move, with j >= i + 2 since j = i + 1 reverses a single city, and draws
+    /// again until the move is valid.
     private TwoOptMove drawRandomMove() {
         var cityCount = current.getTour().getCityIds().size();
-        var i = random.nextInt(0, cityCount - 2);
-        var j = random.nextInt(i + 2, cityCount);
 
-        return new TwoOptMove(current, problemData.getDistanceMatrix(), i, j);
+        while (true) {
+            var i = random.nextInt(0, cityCount - 2);
+            var j = random.nextInt(i + 2, cityCount);
+
+            var move = new TwoOptMove(current, problemData.getDistanceMatrix(), i, j);
+            if (move.isValid()) return move;
+        }
     }
 }

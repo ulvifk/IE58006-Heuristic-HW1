@@ -1,6 +1,7 @@
 package heuristic.solvers.simulatedannealing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import heuristic.model.data.ProblemData;
@@ -85,7 +86,7 @@ class SimulatedAnnealingTest {
             var bestCost = iterationLog.getBest().getCost();
 
             if (iterationLog.getAcceptanceProbability() == null) {
-                assertTrue(iterationLog.isAccepted());
+                assertEquals(iterationLog.getDelta() < -1e-6, iterationLog.isAccepted());
             } else {
                 assertEquals(
                         iterationLog.getRandomDraw() < iterationLog.getAcceptanceProbability(),
@@ -99,6 +100,18 @@ class SimulatedAnnealingTest {
 
             previousCurrentCost = currentCost;
             previousBestCost = bestCost;
+        }
+    }
+
+    @Test
+    void neverProposesTheMoveThatOnlyReversesTheTour() {
+        var iterationLogs = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
+                .solve()
+                .getMetaData();
+
+        for (var iterationLog : iterationLogs) {
+            var isWholeTourReversal = iterationLog.getI() == 0 && iterationLog.getJ() == 19;
+            assertFalse(isWholeTourReversal);
         }
     }
 

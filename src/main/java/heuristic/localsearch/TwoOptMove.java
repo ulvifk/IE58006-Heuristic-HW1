@@ -24,6 +24,17 @@ public class TwoOptMove extends Move {
     @Getter
     private final int j;
 
+    /// A move is valid when it changes the tour:
+    /// - j = i + 1 reverses a single city
+    /// - i = 0 with j = last removes the two edges at the first city and adds them back, reversing the tour
+    public boolean isValid() {
+        var lastPosition = solution.getTour().getCityIds().size() - 1;
+        if (j - i < 2) return false;
+        if (i == 0 && j == lastPosition) return false;
+
+        return true;
+    }
+
     @Override
     public Solution apply() {
         var cityIds = new ArrayList<>(solution.getTour().getCityIds());
