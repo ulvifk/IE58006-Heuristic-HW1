@@ -18,6 +18,7 @@ class PlotFormat:
     COLORS: ClassVar[tuple[str, ...]] = ("#3987e5", "#d95926", "#199e70", "#c98500")
 
     FIGURE_WIDTH: ClassVar[float] = 6.5  # inches, the text width of a fullpage page
+    DPI: ClassVar[int] = 300
 
     # main.tex includes every figure from latex/figures
     LATEX_FIGURES_DIRECTORY: ClassVar[Path] = (
@@ -43,9 +44,11 @@ class PlotFormat:
 
     @staticmethod
     def save(file_name: str, figure: Figure) -> None:
-        """Writes latex/figures/<file_name>.pdf, for main.tex to include, and closes the figure."""
+        """Writes latex/figures/<file_name>.png, for main.tex to include, and closes the figure."""
         PlotFormat.LATEX_FIGURES_DIRECTORY.mkdir(parents=True, exist_ok=True)
         figure.savefig(
-            PlotFormat.LATEX_FIGURES_DIRECTORY / f"{file_name}.pdf", bbox_inches="tight"
+            PlotFormat.LATEX_FIGURES_DIRECTORY / f"{file_name}.png",
+            dpi=PlotFormat.DPI,
+            bbox_inches="tight",
         )
         plt.close(figure)
