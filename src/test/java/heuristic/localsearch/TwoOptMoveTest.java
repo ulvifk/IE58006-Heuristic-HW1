@@ -1,5 +1,6 @@
 package heuristic.localsearch;
 
+import static heuristic.TourTestUtils.getClosedTourLength;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import heuristic.model.data.ProblemData;
@@ -43,7 +44,10 @@ class TwoOptMoveTest {
                 List.of(0, 4, 5, 8, 6, 2, 9, 3, 7, 1, 15, 12, 18, 10, 16, 13, 11, 17, 14, 19),
                 solution.getTour().getCityIds());
         assertEquals(95.30, solution.getCost(), TOLERANCE);
-        assertEquals(getClosedTourLength(solution.getTour().getCityIds()), solution.getCost(), TOLERANCE);
+        assertEquals(
+                getClosedTourLength(solution.getTour(), problemData.getDistanceMatrix()),
+                solution.getCost(),
+                TOLERANCE);
     }
 
     @Test
@@ -52,16 +56,9 @@ class TwoOptMoveTest {
 
         var solution = move.apply();
 
-        assertEquals(getClosedTourLength(solution.getTour().getCityIds()), solution.getCost(), TOLERANCE);
-    }
-
-    private double getClosedTourLength(List<Integer> cityIds) {
-        var length = 0.0;
-        for (int position = 0; position < cityIds.size(); position++) {
-            var nextCityId = cityIds.get((position + 1) % cityIds.size());
-            length += problemData.getDistanceMatrix().getDistance(cityIds.get(position), nextCityId);
-        }
-
-        return length;
+        assertEquals(
+                getClosedTourLength(solution.getTour(), problemData.getDistanceMatrix()),
+                solution.getCost(),
+                TOLERANCE);
     }
 }

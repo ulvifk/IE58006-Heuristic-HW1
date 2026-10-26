@@ -1,5 +1,6 @@
 package heuristic.model.data;
 
+import static heuristic.TourTestUtils.getClosedTourLength;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
@@ -22,14 +23,7 @@ class DistanceMatrixFactoryTest {
     @Test
     void baselineTourHasTheLengthTheAssignmentStates() throws IOException {
         var problemData = ProblemDataParser.fromJson(Files.readString(Path.of("instances/tsp20.json")));
-        var distanceMatrix = problemData.getDistanceMatrix();
-
-        var cityIds = problemData.getInitialTour().getCityIds();
-        var length = 0.0;
-        for (int position = 0; position < cityIds.size(); position++) {
-            var nextCityId = cityIds.get((position + 1) % cityIds.size());
-            length += distanceMatrix.getDistance(cityIds.get(position), nextCityId);
-        }
+        var length = getClosedTourLength(problemData.getInitialTour(), problemData.getDistanceMatrix());
 
         assertEquals(94.15, length, 1e-9);
     }
