@@ -42,7 +42,7 @@ public final class Main {
             var solverSolution =
                     SimulatedAnnealingFactory.build(config, problemData).solve();
 
-            var json = ExperimentResultParser.toJson(new ExperimentResult(config, solverSolution));
+            var json = ExperimentResultParser.toJson(new ExperimentResult(problemData, config, solverSolution));
             Files.writeString(directory.resolve(config.getConfigKey() + ".json"), json);
         }
 
