@@ -1,8 +1,8 @@
 package heuristic.localsearch;
 
-import heuristic.model.data.Tour;
+import heuristic.model.solution.Solution;
 
-/// One candidate change to a tour; gain is positive when the move improves it.
+/// One candidate change to a solution; gain is positive when the move improves it.
 public abstract class Move {
 
     // computed on the first request and kept, since feasibility and acceptance both need it
@@ -18,7 +18,7 @@ public abstract class Move {
 
     public abstract boolean isFeasible();
 
-    public abstract Tour apply();
+    public abstract Solution apply();
 
     protected abstract double computeGain();
 }
