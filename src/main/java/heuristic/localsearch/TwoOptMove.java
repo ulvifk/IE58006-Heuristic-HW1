@@ -20,12 +20,6 @@ public class TwoOptMove extends Move {
     private final int i;
     private final int j;
 
-    // every 2-opt move turns a tour into another tour
-    @Override
-    public boolean isFeasible() {
-        return true;
-    }
-
     @Override
     public Solution apply() {
         var cityIds = new ArrayList<>(solution.getTour().getCityIds());
