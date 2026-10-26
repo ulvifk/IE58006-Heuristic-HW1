@@ -10,3 +10,8 @@ out/
 
 .claude/
 /experiments/
+
+__pycache__/
+*.py[cod]
+.venv/
+.ruff_cache/
