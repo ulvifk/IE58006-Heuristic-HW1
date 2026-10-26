@@ -3,14 +3,15 @@ package heuristic.solvers.simulatedannealing;
 import static heuristic.Constants.ZERO_TOLERANCE;
 
 import heuristic.localsearch.TwoOptMove;
+import heuristic.model.SolverSolution;
 import heuristic.model.data.DistanceMatrix;
 import heuristic.model.solution.Solution;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import lombok.Getter;
 
-/// One simulated annealing run over random 2-opt moves; solve returns the best solution seen.
+/// One simulated annealing run over random 2-opt moves; solve returns the best solution seen with a log of every
+/// candidate.
 ///
 /// - each iteration draws one random 2-opt move of the current solution and accepts or rejects it
 /// - a non-worsening move (delta <= 0) is accepted outright; a worsening one when u < p = e^(-delta / T)
@@ -27,7 +28,6 @@ public class SimulatedAnnealing {
     private Solution best;
     private double temperature;
 
-    @Getter
     private final List<IterationLog> iterationLogs; // [iteration - 1] -> what happened to that candidate
 
     public SimulatedAnnealing(
@@ -42,7 +42,7 @@ public class SimulatedAnnealing {
         this.iterationLogs = new ArrayList<>();
     }
 
-    public Solution solve() {
+    public SolverSolution solve() {
         var deadlineNanos = System.nanoTime() + (long) (config.getTimeLimitSeconds() * 1e9);
 
         while (!shouldStop(deadlineNanos)) {
@@ -73,7 +73,7 @@ public class SimulatedAnnealing {
             }
         }
 
-        return best;
+        return new SolverSolution(best, iterationLogs);
     }
 
     private boolean shouldStop(long deadlineNanos) {

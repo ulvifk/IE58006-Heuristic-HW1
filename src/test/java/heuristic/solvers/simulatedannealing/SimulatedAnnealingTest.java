@@ -26,7 +26,8 @@ class SimulatedAnnealingTest {
     @Test
     void bestSolutionImprovesOnTheBaselineAndIsCostedCorrectly() {
         var best = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
-                .solve();
+                .solve()
+                .getSolution();
 
         assertTrue(best.getCost() < BASELINE_COST);
         assertEquals(
@@ -39,9 +40,11 @@ class SimulatedAnnealingTest {
     @Test
     void sameSeedGivesTheSameBestSolution() {
         var first = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
-                .solve();
+                .solve()
+                .getSolution();
         var second = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData)
-                .solve();
+                .solve()
+                .getSolution();
 
         assertEquals(first, second);
     }
@@ -49,7 +52,8 @@ class SimulatedAnnealingTest {
     @Test
     void returnsTheInitialSolutionWhenTheTimeLimitIsZero() {
         var best = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 0.0), problemData)
-                .solve();
+                .solve()
+                .getSolution();
 
         assertEquals(problemData.getInitialTour(), best.getTour());
     }
@@ -58,9 +62,10 @@ class SimulatedAnnealingTest {
     @Test
     void logsEveryCandidateUntilTheTemperatureReachesTheMinimum() {
         var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData);
-        var best = simulatedAnnealing.solve();
+        var solverSolution = simulatedAnnealing.solve();
+        var best = solverSolution.getSolution();
 
-        var iterationLogs = simulatedAnnealing.getIterationLogs();
+        var iterationLogs = solverSolution.getMetaData();
         assertEquals(960, iterationLogs.size());
         assertEquals(1, iterationLogs.getFirst().getIteration());
         assertEquals(3.0, iterationLogs.getFirst().getTemperature());
@@ -71,11 +76,11 @@ class SimulatedAnnealingTest {
     @Test
     void logsAcceptanceDecisionsConsistentWithTheMoves() {
         var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData);
-        simulatedAnnealing.solve();
+        var iterationLogs = simulatedAnnealing.solve().getMetaData();
 
         var previousCurrentCost = 94.15;
         var previousBestCost = 94.15;
-        for (var iterationLog : simulatedAnnealing.getIterationLogs()) {
+        for (var iterationLog : iterationLogs) {
             var currentCost = iterationLog.getCurrent().getCost();
             var bestCost = iterationLog.getBest().getCost();
 
