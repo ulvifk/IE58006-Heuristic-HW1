@@ -11,4 +11,6 @@ public class ProblemData {
 
     // the baseline tour every run starts from
     Tour initialTour;
+
+    DistanceMatrix distanceMatrix;
 }

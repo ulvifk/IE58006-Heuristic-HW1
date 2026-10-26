@@ -22,7 +22,7 @@ class DistanceMatrixFactoryTest {
     @Test
     void baselineTourHasTheLengthTheAssignmentStates() throws IOException {
         var problemData = ProblemDataParser.fromJson(Files.readString(Path.of("instances/tsp20.json")));
-        var distanceMatrix = DistanceMatrixFactory.build(problemData.getCities());
+        var distanceMatrix = problemData.getDistanceMatrix();
 
         var cityIds = problemData.getInitialTour().getCityIds();
         var length = 0.0;

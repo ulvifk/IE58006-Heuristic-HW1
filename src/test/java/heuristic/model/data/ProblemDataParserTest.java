@@ -55,6 +55,6 @@ class ProblemDataParserTest {
     }
 
     private static ProblemData buildProblemData() {
-        return new ProblemData(List.of(new City(0, 0.5, 0.5), new City(1, 2.0, 0.8)), new Tour(List.of(0, 1)));
+        return ProblemDataFactory.build(List.of(new City(0, 0.5, 0.5), new City(1, 2.0, 0.8)), new Tour(List.of(0, 1)));
     }
 }
