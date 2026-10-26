@@ -14,7 +14,6 @@ java {
 
 application {
     mainClass = "heuristic.Main"
-    applicationDefaultJvmArgs = listOf("--enable-native-access=ALL-UNNAMED")
 }
 
 repositories {
@@ -25,8 +24,6 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.22.3")
     implementation("org.slf4j:slf4j-api:2.0.20")
     runtimeOnly("org.slf4j:slf4j-simple:2.0.20")
-
-    implementation("com.gurobi:gurobi:13.0.3")
 
     testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -50,7 +47,6 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.test {
     useJUnitPlatform()
-    jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
 tasks.compileJava {

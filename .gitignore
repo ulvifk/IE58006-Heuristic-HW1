@@ -6,8 +6,6 @@ out/
 .idea/
 .vscode/
 
-*.ilp
-*.lp
 *.log
 
 .claude/
