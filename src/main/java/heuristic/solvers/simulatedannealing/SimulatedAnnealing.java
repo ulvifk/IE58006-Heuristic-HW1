@@ -5,11 +5,15 @@ import static heuristic.Constants.ZERO_TOLERANCE;
 import heuristic.localsearch.TwoOptMove;
 import heuristic.model.data.DistanceMatrix;
 import heuristic.model.solution.Solution;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import lombok.Getter;
 
 /// One simulated annealing run over random 2-opt moves; solve returns the best solution seen.
 ///
 /// - each iteration draws one random 2-opt move of the current solution and accepts or rejects it
+/// - a non-worsening move (delta <= 0) is accepted outright; a worsening one when u < p = e^(-delta / T)
 /// - the temperature is multiplied by the cooling rate after every movesPerTemperature candidates
 /// - stops when the temperature reaches the minimum or the time limit passes
 /// - the best solution only changes when the current one beats it
@@ -22,7 +26,9 @@ public class SimulatedAnnealing {
     private Solution current;
     private Solution best;
     private double temperature;
-    private int candidateCount;
+
+    @Getter
+    private final List<IterationLog> iterationLogs; // [iteration - 1] -> what happened to that candidate
 
     public SimulatedAnnealing(
             SimulatedAnnealingConfig config, DistanceMatrix distanceMatrix, Random random, Solution initialSolution) {
@@ -33,6 +39,7 @@ public class SimulatedAnnealing {
         this.current = initialSolution;
         this.best = initialSolution;
         this.temperature = config.getInitialTemperature();
+        this.iterationLogs = new ArrayList<>();
     }
 
     public Solution solve() {
@@ -40,17 +47,28 @@ public class SimulatedAnnealing {
 
         while (!shouldStop(deadlineNanos)) {
             var move = drawRandomMove();
-            candidateCount++;
-            if (isAccepted(move)) {
-                current = move.apply();
+            var delta = -move.getGain();
+
+            Double acceptanceProbability = null;
+            Double randomDraw = null;
+            var accepted = true;
+            if (delta > ZERO_TOLERANCE) {
+                acceptanceProbability = Math.exp(-delta / temperature);
+                randomDraw = random.nextDouble();
+                accepted = randomDraw < acceptanceProbability;
             }
 
+            if (accepted) {
+                current = move.apply();
+            }
             if (current.getCost() < best.getCost() - ZERO_TOLERANCE) {
                 best = current;
             }
 
+            log(move, acceptanceProbability, randomDraw, accepted);
+
             // T <- alpha * T after every movesPerTemperature candidates
-            if (candidateCount % config.getMovesPerTemperature() == 0) {
+            if (iterationLogs.size() % config.getMovesPerTemperature() == 0) {
                 temperature *= config.getCoolingRate();
             }
         }
@@ -65,6 +83,13 @@ public class SimulatedAnnealing {
         return false;
     }
 
+    // records the candidate at the current temperature, with the current and best solutions after the decision
+    private void log(TwoOptMove move, Double acceptanceProbability, Double randomDraw, boolean accepted) {
+        var iteration = iterationLogs.size() + 1;
+        iterationLogs.add(new IterationLog(
+                iteration, temperature, move, acceptanceProbability, randomDraw, accepted, current, best));
+    }
+
     /// Draws positions i < j of a 2-opt move, with j >= i + 2 since j = i + 1 reverses a single city.
     private TwoOptMove drawRandomMove() {
         var cityCount = current.getTour().getCityIds().size();
@@ -72,15 +97,5 @@ public class SimulatedAnnealing {
         var j = random.nextInt(i + 2, cityCount);
 
         return new TwoOptMove(current, distanceMatrix, i, j);
-    }
-
-    /// Accepts a non-worsening move (delta <= 0) outright; draws u from U(0, 1) only for a worsening one and accepts
-    /// it when u < e^(-delta / T).
-    private boolean isAccepted(TwoOptMove move) {
-        var delta = -move.getGain();
-        if (delta <= ZERO_TOLERANCE) return true;
-
-        var acceptanceProbability = Math.exp(-delta / temperature);
-        return random.nextDouble() < acceptanceProbability;
     }
 }

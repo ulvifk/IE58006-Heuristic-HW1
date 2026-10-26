@@ -5,6 +5,7 @@ import heuristic.model.data.Tour;
 import heuristic.model.solution.Solution;
 import java.util.ArrayList;
 import java.util.Collections;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /// Replaces edges (t[i], t[i+1]) and (t[j], t[j+1]) with (t[i], t[j]) and (t[i+1], t[j+1]) by reversing positions
@@ -17,7 +18,10 @@ public class TwoOptMove extends Move {
     private final Solution solution;
     private final DistanceMatrix distanceMatrix;
 
+    @Getter
     private final int i;
+
+    @Getter
     private final int j;
 
     @Override

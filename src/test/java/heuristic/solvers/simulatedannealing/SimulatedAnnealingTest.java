@@ -54,6 +54,50 @@ class SimulatedAnnealingTest {
         assertEquals(problemData.getInitialTour(), best.getTour());
     }
 
+    // T reaches Tmin = 0.02 after 48 cooling steps, since 3.0 * 0.9^47 > 0.02 >= 3.0 * 0.9^48; 48 * 20 candidates
+    @Test
+    void logsEveryCandidateUntilTheTemperatureReachesTheMinimum() {
+        var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData);
+        var best = simulatedAnnealing.solve();
+
+        var iterationLogs = simulatedAnnealing.getIterationLogs();
+        assertEquals(960, iterationLogs.size());
+        assertEquals(1, iterationLogs.getFirst().getIteration());
+        assertEquals(3.0, iterationLogs.getFirst().getTemperature());
+        assertEquals(2.7, iterationLogs.get(20).getTemperature(), 1e-9);
+        assertEquals(best, iterationLogs.getLast().getBest());
+    }
+
+    @Test
+    void logsAcceptanceDecisionsConsistentWithTheMoves() {
+        var simulatedAnnealing = SimulatedAnnealingFactory.build(buildBaselineConfig(7, 60.0), problemData);
+        simulatedAnnealing.solve();
+
+        var previousCurrentCost = 94.15;
+        var previousBestCost = 94.15;
+        for (var iterationLog : simulatedAnnealing.getIterationLogs()) {
+            var currentCost = iterationLog.getCurrent().getCost();
+            var bestCost = iterationLog.getBest().getCost();
+
+            if (iterationLog.getAcceptanceProbability() == null) {
+                assertTrue(iterationLog.isAccepted());
+            } else {
+                assertEquals(
+                        iterationLog.getRandomDraw() < iterationLog.getAcceptanceProbability(),
+                        iterationLog.isAccepted());
+            }
+            var expectedCurrentCost = iterationLog.isAccepted()
+                    ? previousCurrentCost - iterationLog.getMove().getGain()
+                    : previousCurrentCost;
+            assertEquals(expectedCurrentCost, currentCost, 1e-9);
+            assertTrue(bestCost <= previousBestCost);
+            assertEquals(Math.min(previousBestCost, currentCost), bestCost, 1e-9);
+
+            previousCurrentCost = currentCost;
+            previousBestCost = bestCost;
+        }
+    }
+
     private static SimulatedAnnealingConfig buildBaselineConfig(long seed, double timeLimitSeconds) {
         return new SimulatedAnnealingConfig(3.0, 0.02, 0.90, 20, seed, timeLimitSeconds);
     }
