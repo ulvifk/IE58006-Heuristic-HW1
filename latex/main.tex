@@ -45,8 +45,12 @@
 \begin{table}[ht]
     \centering
     \input{tables/c1_cooling_rate}
-    \caption{C1: effect of the cooling factor $\alpha$ over seeds 0--9 ($T_0 = 3.0$, $T_{min} = 0.02$, 20 moves per temperature). Best, mean and sample standard deviation of the final best tour length; candidate moves before $T$ reaches $T_{min}$, the same for every seed; share of proposed worsening moves that were accepted, pooled over the seeds.}
+    \caption{C1: effect of the cooling factor $\alpha$ over seeds 0--9 ($T_0 = 3.0$, $T_{min} = 0.02$, cooling every 20 candidate moves).}
+    \label{tab:c1-cooling-rate}
 \end{table}
+
+\paragraph{C1(d): trade-off.}
+As Table~\ref{tab:c1-cooling-rate} shows, slower cooling (a larger $\alpha$) lengthens the run, because the temperature needs more cooling steps to reach $T_{min}$: the number of candidate moves grows from 460 at $\alpha = 0.80$ to 9980 at $\alpha = 0.99$. Since the temperature stays high for longer, the search accepts far more worse moves. This stronger emphasis on exploration lets the search escape poor regions before it settles, which improves the final tours: the mean best length drops from 44.82 to 41.15. With many more iterations, the result also depends less on the seed, and the standard deviation shrinks from 2.55 to 0.61. The cost is computational effort, which grows in proportion to the number of candidate moves.
 
 \section*{Part D: Interpretation and Reflection}
 

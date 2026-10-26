@@ -32,12 +32,12 @@ class PlotFormat:
 
     @staticmethod
     def build_config_title(config: SimulatedAnnealingConfig) -> str:
-        """The run's parameters as a plot title line; e.g. "T0 = 3.00, alpha = 0.90, Tmin = 0.02, 20 moves per T, seed 7"."""
+        """The run's parameters as a plot title line; e.g. "T0 = 3.00, alpha = 0.90, Tmin = 0.02, cooling every 20 candidate moves, seed 7"."""
         return (
             f"$T_0$ = {config.initial_temperature:.2f}, "
             f"$\\alpha$ = {config.cooling_rate:.2f}, "
             f"$T_{{min}}$ = {config.minimum_temperature:.2f}, "
-            f"{config.moves_per_temperature} moves per $T$, "
+            f"cooling every {config.moves_per_temperature} candidate moves, "
             f"seed {config.seed}"
         )
 
