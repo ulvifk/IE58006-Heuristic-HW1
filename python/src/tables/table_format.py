@@ -30,10 +30,14 @@ class TableFormat:
     @staticmethod
     def write(file_name: str, table: pd.DataFrame, column_format: str) -> None:
         """
-        Writes an already formatted table to latex/tables/<file_name>.tex as a booktabs
-        tabular, its column names as the header, for main.tex to input.
+        Writes an already formatted table as a booktabs tabular, its column names as
+        the header.
         """
         latex = table.to_latex(index=False, escape=False, column_format=column_format)
+        TableFormat.write_latex(file_name, latex)
 
+    @staticmethod
+    def write_latex(file_name: str, latex: str) -> None:
+        """Writes latex/tables/<file_name>.tex, for main.tex to input."""
         TableFormat.LATEX_TABLES_DIRECTORY.mkdir(parents=True, exist_ok=True)
         (TableFormat.LATEX_TABLES_DIRECTORY / f"{file_name}.tex").write_text(latex)
