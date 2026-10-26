@@ -14,6 +14,6 @@ public final class SimulatedAnnealingFactory {
         var random = new Random(config.getSeed());
         var initialSolution = SolutionFactory.build(problemData.getInitialTour(), problemData.getDistanceMatrix());
 
-        return new SimulatedAnnealing(config, problemData.getDistanceMatrix(), random, initialSolution);
+        return new SimulatedAnnealing(config, problemData, random, initialSolution);
     }
 }

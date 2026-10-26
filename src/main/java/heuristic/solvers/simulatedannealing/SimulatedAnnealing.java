@@ -4,7 +4,7 @@ import static heuristic.Constants.ZERO_TOLERANCE;
 
 import heuristic.localsearch.TwoOptMove;
 import heuristic.model.SolverSolution;
-import heuristic.model.data.DistanceMatrix;
+import heuristic.model.data.ProblemData;
 import heuristic.model.solution.Solution;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Random;
 public class SimulatedAnnealing {
 
     private final SimulatedAnnealingConfig config;
-    private final DistanceMatrix distanceMatrix;
+    private final ProblemData problemData;
     private final Random random; // seeded from the config, so a run is reproducible
 
     private Solution current;
@@ -31,9 +31,9 @@ public class SimulatedAnnealing {
     private final List<IterationLog> iterationLogs; // [iteration - 1] -> what happened to that candidate
 
     public SimulatedAnnealing(
-            SimulatedAnnealingConfig config, DistanceMatrix distanceMatrix, Random random, Solution initialSolution) {
+            SimulatedAnnealingConfig config, ProblemData problemData, Random random, Solution initialSolution) {
         this.config = config;
-        this.distanceMatrix = distanceMatrix;
+        this.problemData = problemData;
         this.random = random;
 
         this.current = initialSolution;
@@ -105,6 +105,6 @@ public class SimulatedAnnealing {
         var i = random.nextInt(0, cityCount - 2);
         var j = random.nextInt(i + 2, cityCount);
 
-        return new TwoOptMove(current, distanceMatrix, i, j);
+        return new TwoOptMove(current, problemData.getDistanceMatrix(), i, j);
     }
 }
