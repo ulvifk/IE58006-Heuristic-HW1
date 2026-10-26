@@ -6,10 +6,23 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-/// The runs of each Part C experiment: every configuration under test, once per seed 0..9, so all configurations
+/// The runs of each experiment. Part C runs every configuration under test once per seed 0..9, so all configurations
 /// see the same seeds and compare fairly. The 60 s time limit is far above any run, so T always reaches Tmin first.
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ExperimentsConfigs {
+
+    /// B5: the baseline parameters with seed 7; 1 run.
+    public static List<SimulatedAnnealingConfig> getBaselineConfigs() {
+        var initialTemperature = 3.0;
+        var minimumTemperature = 0.02;
+        var coolingRate = 0.90;
+        var movesPerTemperature = 20;
+        var seed = 7;
+        var timeLimitSeconds = 60.0;
+
+        return List.of(new SimulatedAnnealingConfig(
+                initialTemperature, minimumTemperature, coolingRate, movesPerTemperature, seed, timeLimitSeconds));
+    }
 
     /// C1: alpha in {0.80, 0.90, 0.95, 0.99}; 4 alphas x 10 seeds.
     public static List<SimulatedAnnealingConfig> getCoolingRateConfigs() {
