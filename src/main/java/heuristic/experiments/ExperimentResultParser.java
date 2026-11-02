@@ -1,6 +1,6 @@
 package heuristic.experiments;
 
-import static heuristic.JsonUtils.PRETTY_WRITER;
+import static heuristic.JsonUtils.OBJECT_MAPPER;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public final class ExperimentResultParser {
 
     public static String toJson(ExperimentResult experimentResult) throws JsonProcessingException {
-        return PRETTY_WRITER.writeValueAsString(experimentResult);
+        return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(experimentResult);
     }
 }

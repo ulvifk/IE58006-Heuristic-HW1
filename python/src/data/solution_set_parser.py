@@ -57,7 +57,6 @@ class SolutionSetParser:
 
         return ProblemData(
             cities=tuple(City(**raw_city) for raw_city in raw["cities"]),
-            initial_tour=Tour(city_ids=tuple(raw["initial_tour"]["city_ids"])),
             distance_matrix=DistanceMatrix(distances=distances),
         )
 

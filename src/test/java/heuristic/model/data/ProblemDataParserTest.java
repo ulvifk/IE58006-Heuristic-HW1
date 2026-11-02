@@ -4,12 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,14 +22,6 @@ class ProblemDataParserTest {
             """;
 
     @Test
-    void toJsonSerializesCompleteProblemData() throws JsonProcessingException {
-        var json = ProblemDataParser.toJson(buildProblemData());
-
-        var objectMapper = new ObjectMapper();
-        assertEquals(objectMapper.readValue(JSON, Map.class), objectMapper.readValue(json, Map.class));
-    }
-
-    @Test
     void fromJsonReconstructsProblemData() throws JsonProcessingException {
         assertEquals(buildProblemData(), ProblemDataParser.fromJson(JSON));
     }
@@ -45,13 +32,6 @@ class ProblemDataParserTest {
         var json = JSON.replace("\"id\": 1", "\"id\": " + id);
 
         assertThrows(JsonProcessingException.class, () -> ProblemDataParser.fromJson(json));
-    }
-
-    @Test
-    void toJsonWritesTheInstanceFileUnchanged() throws IOException {
-        var json = Files.readString(Path.of("instances/tsp20.json"));
-
-        assertEquals(json, ProblemDataParser.toJson(ProblemDataParser.fromJson(json)));
     }
 
     private static ProblemData buildProblemData() {

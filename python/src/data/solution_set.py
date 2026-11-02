@@ -66,7 +66,6 @@ class SolverSolution:
 @dataclass(frozen=True, slots=True)
 class ProblemData:
     cities: tuple[City, ...]  # [city id] -> city
-    initial_tour: Tour  # the baseline tour every run starts from
     distance_matrix: DistanceMatrix
 
 
