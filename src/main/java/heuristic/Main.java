@@ -31,6 +31,7 @@ public final class Main {
         runExperiment("baseline", ExperimentsConfigs.getBaselineConfigs(), problemData);
         runExperiment("c1_cooling_rate", ExperimentsConfigs.getCoolingRateConfigs(), problemData);
         runExperiment("c2_initial_temperature", ExperimentsConfigs.getInitialTemperatureConfigs(), problemData);
+        runExperiment("c3_recommended", ExperimentsConfigs.getRecommendedConfigs(), problemData);
     }
 
     private static void runExperiment(

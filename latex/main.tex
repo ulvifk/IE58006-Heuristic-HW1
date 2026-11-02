@@ -6,8 +6,9 @@
 \usepackage{makecell}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{pdfpages}
 \usepackage{xcolor}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 
 \title{IE 58006 Heuristic Optimization\\Assignment 1: Simulated Annealing}
 \author{Ulvi F\i nd\i k}
@@ -17,7 +18,7 @@
 
 \maketitle
 
-\section*{Part A: SA Mechanics by Hand}
+\includepdf[pages=-]{part_a_handwritten.pdf}
 
 \section*{Part B: Implementation}
 
@@ -25,6 +26,7 @@
     \centering
     \input{tables/first_moves}
     \caption{First 10 candidate moves of the baseline run (seed 7).}
+    \label{tab:first-moves}
 \end{table}
 
 \input{tables/final_best_tour}
@@ -69,7 +71,36 @@ As Table~\ref{tab:c2-initial-temperature} shows, the initial temperature mainly 
 
 \subsection*{C3: Recommended Configuration}
 
+\paragraph{C3(a): choice.}
+I choose $T_0 = 6.0$ and $\alpha = 0.99$, because robustness matters more than one good run. In C2, $T_0 = 6.0$ has a slightly worse mean than $T_0 = 3.0$ (42.89 against 42.62), but a much lower standard deviation (0.95 against 1.40), and it adds only a few candidate moves (1100 against 960). Likewise in C1, $\alpha = 0.99$ keeps the temperature high for longer, so the search explores more and is more likely to reach a high-quality solution in every run, which gives the lowest standard deviation (0.61).
+
+\paragraph{C3(b): results.}
+Table~\ref{tab:c3-recommended} reports the chosen configuration over seeds 0--9, next to the baseline settings.
+
+\begin{table}[H]
+    \centering
+    \input{tables/c3_recommended}
+    \caption{C3: recommended configuration ($T_0 = 6.0$, $\alpha = 0.99$) against the baseline settings ($T_0 = 3.0$, $\alpha = 0.90$) over seeds 0--9 ($T_{min} = 0.02$, cooling every 20 candidate moves).}
+    \label{tab:c3-recommended}
+\end{table}
+
+\paragraph{C3(c): comparison.}
+Compared with the baseline settings, the recommended configuration lowers the mean from 42.62 to 40.96 and the standard deviation from 1.40 to 0.42. The price is about twelve times as many candidate moves (11360 against 960). Tuning each parameter on its own, as in C1 and C2, is not ideal, because the parameters are not independent: they affect each other. If time allows, it is better to test all combinations. The instance size also matters. My configuration needs much more computation than the baseline, and whether that is acceptable depends on the solve time. Since this instance is very small, a twelvefold increase in solve time changes nothing in practice.
+
 \section*{Part D: Interpretation and Reflection}
+
+\paragraph{(a)}
+A worse move with $\Delta > 0$ is accepted with probability
+\[
+p = e^{-\Delta / T}.
+\]
+For a fixed $\Delta$, a higher temperature gives a higher $p$, so some random worsening moves are applied and the search drifts away from the local optimum it is in. This is exploration, or diversification. In C2, 9.15\% of the worse moves were accepted at $T_0 = 6.0$ but only 1.74\% at $T_0 = 1.0$. As $T$ goes to zero, $p$ goes to zero as well, so only improving moves are accepted and the search behaves like greedy local search.
+
+\paragraph{(b)}
+Since worsening moves can be accepted, the current solution at any point of the run, including its end, may not be the best solution visited so far. In Table~\ref{tab:first-moves}, the current length rises to 84.72 at iteration 7 while the best-so-far stays at 76.83. Without a separate copy of the best-so-far, that solution would be lost, and the run would report whatever the current solution happened to be when it stopped.
+
+\paragraph{(c)}
+In the baseline run (seed 7), iteration 7 in Table~\ref{tab:first-moves} accepts a worsening move with $\Delta = +7.25$ at $T = 3.0$, since $u = 0.0832 < p = 0.0892$, and the current length rises from 77.47 to 84.72. From this new position the search finds improving moves again, and at iteration 11 it reaches a new best-so-far of 76.14, better than the 76.83 it had before the worsening move.
 
 \section*{Implementation Choices}
 

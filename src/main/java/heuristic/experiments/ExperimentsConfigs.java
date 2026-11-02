@@ -62,7 +62,9 @@ public final class ExperimentsConfigs {
     }
 
     /// C3: the T0 and alpha chosen from C1 and C2; 10 seeds.
-    public static List<SimulatedAnnealingConfig> getRecommendedConfigs(double initialTemperature, double coolingRate) {
+    public static List<SimulatedAnnealingConfig> getRecommendedConfigs() {
+        var initialTemperature = 6.0;
+        var coolingRate = 0.99;
         var minimumTemperature = 0.02;
         var movesPerTemperature = 20;
         var seedCount = 10;
