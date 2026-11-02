@@ -71,7 +71,7 @@ As Table~\ref{tab:c1-cooling-rate} shows, slower cooling (a larger $\alpha$) len
 \end{table}
 
 \paragraph{C2: interpretation.}
-As Table~\ref{tab:c2-initial-temperature} shows, the initial temperature mainly controls how freely the search moves early on. At $T_0 = 1.0$ the run starts almost greedy: only 1.74\% of the worse moves are accepted, so the search settles into the first good region it finds, which gives the worst mean (43.55) and the largest standard deviation (2.09). At $T_0 = 6.0$ the share of accepted worse moves rises to 9.15\%, and the first cooling steps are spent wandering almost at random. This makes the results more consistent (standard deviation 0.95) but does not improve the mean (42.89). $T_0 = 3.0$ strikes the best balance and gives the best mean (42.62). The computational effort grows only slowly with $T_0$. The run grows from 760 to 1100 candidate moves.
+As Table~\ref{tab:c2-initial-temperature} shows, the initial temperature mainly controls how freely the search moves early on. At $T_0 = 1.0$ the run starts almost greedy: only 1.74\% of the worse moves are accepted, so the search settles into the first good region it finds, which gives the worst mean (43.55) and the largest standard deviation (2.09). At $T_0 = 6.0$ the share of accepted worse moves rises to 9.15\%, and the first cooling steps are spent wandering almost at random. This makes the results more consistent (standard deviation 0.95) but does not improve the mean (42.89). $T_0 = 3.0$ strikes the best balance and gives the best mean (42.62), while $T_0 = 6.0$ is the most consistent. The computational effort grows only slowly with $T_0$. The run grows from 760 to 1100 candidate moves.
 
 \subsection*{C3: Recommended Configuration}
 
