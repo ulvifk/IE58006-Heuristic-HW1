@@ -3,6 +3,7 @@ package heuristic;
 import heuristic.experiments.ExperimentResult;
 import heuristic.experiments.ExperimentResultParser;
 import heuristic.experiments.ExperimentsConfigs;
+import heuristic.feasibility.FeasibilityValidation;
 import heuristic.model.data.ProblemData;
 import heuristic.model.data.ProblemDataParser;
 import heuristic.solvers.simulatedannealing.SimulatedAnnealingConfig;
@@ -42,6 +43,7 @@ public final class Main {
         for (var config : configs) {
             var solverSolution =
                     SimulatedAnnealingFactory.build(config, problemData).solve();
+            FeasibilityValidation.validate(solverSolution.getSolution(), problemData);
 
             var json = ExperimentResultParser.toJson(new ExperimentResult(problemData, config, solverSolution));
             Files.writeString(directory.resolve(config.getConfigKey() + ".json"), json);
